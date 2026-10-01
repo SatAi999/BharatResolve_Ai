@@ -102,6 +102,15 @@ def get_case(case_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail=f"Case {case_id} not found")
     return format_case_response(case, db)
 
+@router.delete("/{case_id}")
+def delete_case(case_id: str, db: Session = Depends(get_db)):
+    case = db.query(Case).filter(Case.id == case_id).first()
+    if not case:
+        raise HTTPException(status_code=404, detail=f"Case {case_id} not found")
+    db.delete(case)
+    db.commit()
+    return {"status": "success", "message": f"Case {case_id} deleted successfully"}
+
 @router.get("/{case_id}/stream")
 async def stream_case_events(case_id: str, db: Session = Depends(get_db)):
     """Server-Sent Events (SSE) endpoint providing real-time operational agent events."""

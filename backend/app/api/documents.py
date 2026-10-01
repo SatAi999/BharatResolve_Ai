@@ -61,3 +61,22 @@ async def upload_document(
         "extracted_fields": doc.extracted_fields,
         "ocr_preview": (doc.ocr_text or "")[:300]
     }
+
+@router.get("")
+def list_documents(db: Session = Depends(get_db)):
+    docs = db.query(Document).order_by(Document.created_at.desc()).all()
+    return [
+        {
+            "id": d.id,
+            "case_id": d.case_id,
+            "file_name": d.file_name,
+            "mime_type": d.mime_type,
+            "file_size": d.file_size,
+            "document_type": d.document_type,
+            "status": d.status,
+            "extracted_fields": d.extracted_fields,
+            "ocr_preview": (d.ocr_text or "")[:300],
+            "created_at": d.created_at.isoformat() if d.created_at else None
+        }
+        for d in docs
+    ]

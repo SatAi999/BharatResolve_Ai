@@ -170,3 +170,17 @@ export async function uploadDocument(case_id: string, file: File) {
   if (!res.ok) throw new Error("Failed to upload document");
   return res.json();
 }
+
+export async function deleteCase(id: string) {
+  const res = await fetch(`${API_BASE_URL}/api/cases/${id}`, {
+    method: "DELETE"
+  });
+  if (!res.ok) throw new Error(`Failed to delete case ${id}`);
+  return res.json();
+}
+
+export async function fetchDocuments() {
+  const res = await fetch(`${API_BASE_URL}/api/documents`);
+  if (!res.ok) throw new Error("Failed to fetch documents");
+  return res.json();
+}
