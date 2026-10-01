@@ -1,0 +1,38 @@
+apiVersion: aikart.dev/v1
+kind: AgentManifest
+
+metadata:
+  name: bharatresolve-ai
+  displayName: BharatResolve AI
+  description: "An agentic AI case-resolution engine for India that investigates real-world citizen problems, gathers evidence, plans actions, and verifies outcomes."
+
+runtime:
+  type: docker
+  image: docker.io/satwik/bharatresolve-ai:1.0.0
+  command: python aikart/run.py
+
+resources:
+  cpu: 2
+  memoryMb: 4096
+  timeoutSeconds: 280
+
+inputs:
+  - name: problem_statement
+    label: Problem Description
+    type: string
+    required: true
+  - name: language
+    label: Preferred Language
+    type: string
+    required: false
+    default: "en"
+
+output:
+  format: markdown
+
+security:
+  networkEgress:
+    allowlist:
+      - api.open-meteo.com
+      - nominatim.openstreetmap.org
+      - generativelanguage.googleapis.com
